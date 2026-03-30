@@ -14,6 +14,21 @@ import json
 import platform
 import psutil
 from datetime import datetime
+from modules.alert_manager import AlertManager
+from modules.behavioral_analysis import BehavioralAnalysis
+from modules.port_knocking import PortKnocking
+from modules.fail2ban_integration import Fail2Ban
+from modules.vpn_monitor import VPNMonitor
+from modules.usb_control import USBControl
+from modules.web_waf import WebWAF
+from modules.security_scorecard import SecurityScorecard
+from modules.auto_patching import AutoPatching
+from modules.darkweb_monitor import DarkWebMonitor
+from modules.ransomware_protection import RansomwareProtection
+from modules.network_isolation import NetworkIsolation
+from modules.forensic_analysis import ForensicAnalysis
+from modules.honeypot_network import HoneypotNetwork
+from modules.cloud_backup import CloudBackup
 
 try:
     import requests
@@ -102,7 +117,22 @@ class AwakenedCore:
 {Colors.GREEN}[10]{Colors.WHITE} monitor / mon   {Colors.DARK}» System Monitor{Colors.END}
 {Colors.GREEN}[11]{Colors.WHITE} alert / al      {Colors.DARK}» Alert Configuration{Colors.END}
 {Colors.GREEN}[12]{Colors.WHITE} clean / c       {Colors.DARK}» System Cleanup{Colors.END}
-{Colors.GREEN}[13]{Colors.WHITE} help / ?        {Colors.DARK}» Show help{Colors.END}
+{Colors.GREEN}[13]{Colors.WHITE} alert / al      {Colors.DARK}» Alert Manager{Colors.END}
+{Colors.GREEN}[14]{Colors.WHITE} behavior / bh   {Colors.DARK}» Behavioral Analysis{Colors.END}
+{Colors.GREEN}[15]{Colors.WHITE} knocking / pk   {Colors.DARK}» Port Knocking{Colors.END}
+{Colors.GREEN}[16]{Colors.WHITE} fail2ban / f2b  {Colors.DARK}» Fail2Ban{Colors.END}
+{Colors.GREEN}[17]{Colors.WHITE} vpn / v         {Colors.DARK}» VPN Monitor{Colors.END}
+{Colors.GREEN}[18]{Colors.WHITE} usb / u         {Colors.DARK}» USB Control{Colors.END}
+{Colors.GREEN}[19]{Colors.WHITE} waf / w         {Colors.DARK}» Web WAF{Colors.END}
+{Colors.GREEN}[20]{Colors.WHITE} score / sc      {Colors.DARK}» Security Scorecard{Colors.END}
+{Colors.GREEN}[21]{Colors.WHITE} patch / pt      {Colors.DARK}» Auto Patching{Colors.END}
+{Colors.GREEN}[22]{Colors.WHITE} darkweb / dw    {Colors.DARK}» Dark Web Monitor{Colors.END}
+{Colors.GREEN}[23]{Colors.WHITE} ransom / rw     {Colors.DARK}» Ransomware Protection{Colors.END}
+{Colors.GREEN}[24]{Colors.WHITE} isolate / is    {Colors.DARK}» Network Isolation{Colors.END}
+{Colors.GREEN}[25]{Colors.WHITE} forensic / fs   {Colors.DARK}» Forensic Analysis{Colors.END}
+{Colors.GREEN}[26]{Colors.WHITE} honeynet / hn   {Colors.DARK}» Honeypot Network{Colors.END}
+{Colors.GREEN}[27]{Colors.WHITE} cloud / cld     {Colors.DARK}» Cloud Backup{Colors.END}
+{Colors.GREEN}[28]{Colors.WHITE} help / ?        {Colors.DARK}» Show help{Colors.END}
 {Colors.GREEN}[00]{Colors.WHITE} exit / quit     {Colors.DARK}» Exit{Colors.END}
 
 {Colors.CYAN}╚═══════════════════════════════════════════════════════════════════════════╝{Colors.END}
@@ -646,6 +676,52 @@ class AwakenedCore:
                     self.system_cleanup()
                 elif cmd in ['clear', 'cls']:
                     self.clear()
+                elif cmd in ['alert', 'al']:
+                    AlertManager().configure()
+                elif cmd in ['behavior', 'bh']:
+                    ba = BehavioralAnalysis()
+                    ba.learn(7)
+                    print(ba.detect_anomalies())
+                elif cmd in ['knocking', 'pk']:
+                    pk = PortKnocking()
+                    pk.start()
+                elif cmd in ['vpn', 'v']:
+                    vpn = VPNMonitor()
+                    vpn.monitor()
+                elif cmd in ['usb', 'u']:
+                    usb = USBControl()
+                    usb.monitor()
+                elif cmd in ['waf', 'w']:
+                    waf = WebWAF()
+                    print("[*] Web WAF ready")
+                elif cmd in ['score', 'sc']:
+                    sc = SecurityScorecard()
+                    result = sc.run_audit()
+                    print(f"Security Score: {result['score']}/100 ({result['grade']})")
+                    for issue in result['issues']:
+                        print(f"  - {issue}")
+                elif cmd in ['patch', 'pt']:
+                    patcher = AutoPatching()
+                    patcher.apply_updates()
+                elif cmd in ['darkweb', 'dw']:
+                    dwm = DarkWebMonitor()
+                    dwm.monitor()
+                elif cmd in ['ransom', 'rw']:
+                    rp = RansomwareProtection()
+                    rp.scan_directory(os.path.expanduser("~"))
+                    print("[*] Ransomware Protection active")
+                elif cmd in ['isolate', 'is']:
+                    ni = NetworkIsolation()
+                    ni.quarantine_mode()
+                elif cmd in ['forensic', 'fs']:
+                    fa = ForensicAnalysis()
+                    fa.create_report()
+                elif cmd in ['honeynet', 'hn']:
+                    hn = HoneypotNetwork()
+                    hn.start_all()
+                elif cmd in ['cloud', 'cld']:
+                    cb = CloudBackup()
+                    cb.backup(input("File to backup: "))
                 elif cmd in ['help', '?']:
                     self.show_help()
                 elif cmd in ['exit', 'quit']:
