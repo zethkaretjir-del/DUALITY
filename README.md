@@ -43,13 +43,13 @@ cd DUALITY
 
 ## Quick Install
 
-## Install Duality-Attack
+### Install Duality-Attack
 ```bash
 cd Duality-Attack
 chmod +x install.sh
 ./install.sh
 python3 forgotten_core_v2.py
-## Install Duality-Defense
+### Install Duality-Defense
 ```bash
 cd Duality-Defense
 chmod +x install.sh
