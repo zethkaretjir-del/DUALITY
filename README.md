@@ -40,7 +40,6 @@
 ```bash
 git clone https://github.com/zethkaretjir-del/DUALITY.git
 cd DUALITY
-` ``` `
 
 ## Quick Install
 
@@ -51,7 +50,6 @@ cd Duality-Attack
 chmod +x install.sh
 ./install.sh
 python3 forgotten_core_v2.py
-` ``` `
 
 ### Install Duality-Defense
 
@@ -60,4 +58,3 @@ cd Duality-Defense
 chmod +x install.sh
 ./install.sh
 python3 awakened_core.py
-` ``` `
