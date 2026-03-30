@@ -49,6 +49,7 @@ cd Duality-Attack
 chmod +x install.sh
 ./install.sh
 python3 forgotten_core_v2.py
+
 ### Install Duality-Defense
 ```bash
 cd Duality-Defense
