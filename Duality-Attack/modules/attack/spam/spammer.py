@@ -46,8 +46,9 @@ class Spammer:
                     print(f"{Colors.GREEN}[✓] Email {i+1}/{count} terkirim{Colors.END}")
                     
                 except Exception as e:
-                    failed += 1
-                    print(f"{Colors.RED}[✗] Email {i+1}/{count} gagal: {e}{Colors.END}")
+                    from core.utils import print_error
+                    print_error(f"Spammer Failed: {e}")
+                    return
                 
                 time.sleep(delay)
             

@@ -16,6 +16,11 @@ from .advanced_attack.cam_hack import CameraHack
 from .advanced_attack.pentest_report import PentestReport
 from .advanced_attack.ddos_panel import DDoSPanel
 from .advanced_attack.exploit_db import ExploitDB
+from .ai_scanner.ai_assistant import AIAssistant
+from .ai_scanner.vuln_scanner import VulnScanner
+from .c2_gui.c2_gui import C2GUI
+from .darkweb.darkweb_integration import DarkWebIntegration
+from .social.social_scraper import SocialMediaScraper
 
 __all__ = [
     'PayloadGenerator',
@@ -24,7 +29,8 @@ __all__ = [
     'AnonymityModule',
     'C2Server',
     'PhoneTracker',
-    'Spammer'
+    'Spammer',
+    'LANScanner',
     'SubdomainEnum',
     'EmailScraper',
     'LinkExtractor',
@@ -36,4 +42,9 @@ __all__ = [
     'PentestReport',
     'DDoSPanel',
     'ExploitDB',
+    'AIAssistant',
+    'VulnScanner',
+    'C2GUI',
+    'DarkWebIntegration',
+    'SocialMediaScraper'
 ]

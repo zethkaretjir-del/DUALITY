@@ -65,8 +65,10 @@ class PhoneTracker:
             
             return results
             
-        except phonenumbers.NumberParseException as e:
-            return {'error': str(e), 'number': number}
+            except phonenumbers.NumberParseException as e:
+                from core.utils import print_error
+                print_error(f"Invalid phone number format: {number}")
+                return {'error': str(e), 'number': number}
     
     def run(self):
         """Main execution"""

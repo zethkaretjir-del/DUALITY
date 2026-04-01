@@ -7,7 +7,7 @@ import time
 import random
 import subprocess
 import json
-
+from core.utils import loading_animation
 # Colors
 class Colors:
     RED = '\033[91m'
@@ -191,15 +191,6 @@ def add_to_whitelist(ip_info):
         print(f"{Colors.YELLOW}[!] IP {ip_info['ip']} sudah ada di whitelist{Colors.END}")
         return False
 
-def loading_animation(message, duration=1):
-    """Loading animation"""
-    spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
-    print(f"{Colors.CYAN}", end="")
-    for i in range(duration * 10):
-        print(f"\r{message} {spinner[i % len(spinner)]}", end="", flush=True)
-        time.sleep(0.1)
-    print(f"\r{message} ✅ Done!{Colors.END}")
-
 def banner():
     """Banner utama DUALITY"""
     logo_path = os.path.join(os.path.dirname(__file__), 'Duality-Attack', 'assets', 'logo.txt')
@@ -238,9 +229,9 @@ def banner():
 def show_menu():
     """Menu utama"""
     menu = f"""
-{Colors.GREEN}{Colors.BOLD}┌─────────────────────────────────────────────────────────────────┐{Colors.END}
-{Colors.GREEN}{Colors.BOLD}│                    CHOOSE YOUR PATH                              │{Colors.END}
-{Colors.GREEN}{Colors.BOLD}├─────────────────────────────────────────────────────────────────┤{Colors.END}
+{Colors.RED}{Colors.BOLD}┌─────────────────────────────────────────────────────────────────┐{Colors.END}
+{Colors.RED}{Colors.BOLD}│                    CHOOSE YOUR PATH                              │{Colors.END}
+{Colors.RED}{Colors.BOLD}├─────────────────────────────────────────────────────────────────┤{Colors.END}
 
 {Colors.RED}{Colors.BOLD}   ⚔️  [{Colors.WHITE}1{Colors.RED}]  ATTACK MODE{Colors.END}
 {Colors.DIM}       → Penetration testing toolkit{Colors.END}
@@ -255,17 +246,17 @@ def show_menu():
 
 {Colors.YELLOW}{Colors.BOLD}   🚪  [{Colors.WHITE}0{Colors.YELLOW}]  EXIT{Colors.END}
 
-{Colors.GREEN}{Colors.BOLD}└─────────────────────────────────────────────────────────────────┘{Colors.END}
+{Colors.RED}{Colors.BOLD}└─────────────────────────────────────────────────────────────────┘{Colors.END}
     """
     print(menu)
 
 def launch_attack_mode():
     """Menjalankan Duality Attack"""
-    print(f"\n{Colors.CYAN}[*] Loading attack modules...{Colors.END}")
-    loading_animation("Memuat OSINT modules", 1)
-    loading_animation("Memuat Attack modules", 1)
-    loading_animation("Memuat Utility modules", 1)
-    
+    print(f"\n{Colors.YELLOW}[*] Loading attack modules...{Colors.END}")
+    loading_animation("Memuat Utility modules", 2, "bar")
+    loading_animation("Memuat Attack modules", 2, "bar")
+    loading_animation("Memuat Advanced modules", 2, "bar")
+    loading_animation("Menjalankan Duality Attack", 2, "bar")
     attack_path = os.path.join(os.path.dirname(__file__), 'Duality-Attack', 'duality.py')
     if os.path.exists(attack_path):
         subprocess.run(['python3', attack_path])
@@ -313,9 +304,8 @@ def main():
             sys.exit(0)
     
     # HABIS ITU MATRIX RAIN
-    print(f"\n{Colors.GREEN}[*] Memulai animasi Matrix rain...{Colors.END}")
     time.sleep(1)
-    matrix_rain_hijau(duration=5, fall_speed=1.5)
+    matrix_rain_hijau(duration=6, fall_speed=1.5)
     
     # TERUS MASUK MENU
     loading_animation("Initializing DUALITY", 2)

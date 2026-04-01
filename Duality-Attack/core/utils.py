@@ -6,8 +6,9 @@ import sys
 import time
 import json
 import subprocess
+import random
 from datetime import datetime
-from core.colors import Colors
+from .colors import Colors
 
 def clear_screen():
     """Clear terminal screen"""
@@ -114,3 +115,105 @@ def confirm(prompt):
 def pause():
     """Pause execution"""
     input(f"{Colors.DIM}Press Enter to continue...{Colors.RESET}")
+
+def print_error(msg, show_tip=True):
+    """Print error message dengan format keren"""
+    print(f"\n{Colors.RED}{Colors.BOLD}╔═══════════════════════════════════════════════════════════════╗{Colors.END}")
+    print(f"{Colors.RED}{Colors.BOLD}║  ❌ ERROR: {msg}{Colors.END}")
+    
+    if show_tip:
+        tips = [
+            "Type 'help' to see available commands",
+            "Check your spelling",
+            "Make sure you're in the right directory",
+            "Run with: python3 duality.py"
+        ]
+        import random
+        tip = random.choice(tips)
+        print(f"{Colors.RED}{Colors.BOLD}║{Colors.END}")
+        print(f"{Colors.RED}{Colors.BOLD}║  💡 TIP: {tip}{Colors.END}")
+    
+    print(f"{Colors.RED}{Colors.BOLD}╚═══════════════════════════════════════════════════════════════╝{Colors.END}")
+
+def print_warning(msg):
+    """Print warning message"""
+    print(f"\n{Colors.YELLOW}{Colors.BOLD}⚠️  WARNING: {msg}{Colors.END}")
+
+def print_success(msg):
+    """Print success message"""
+    print(f"{Colors.GREEN}{Colors.BOLD}✅ {msg}{Colors.END}")
+
+def print_info(msg):
+    """Print info message"""
+    print(f"{Colors.CYAN}[*] {msg}{Colors.END}")
+
+def loading_animation(message, duration=2, style="spinner"):
+    """
+    Loading animation keren
+    style: "spinner", "bar", "dots", "matrix"
+    """
+    import time
+    import sys
+    
+    if style == "spinner":
+        spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
+        print(f"{Colors.CYAN}", end="")
+        for i in range(duration * 10):
+            print(f"\r{message} {spinner[i % len(spinner)]}", end="", flush=True)
+            time.sleep(0.1)
+        print(f"\r{message} ✅ Done!{Colors.END}")
+    
+    elif style == "bar":
+        width = 40
+        steps = duration * 20  # lebih banyak step (20 per detik)
+        print(f"{Colors.CYAN}", end="")
+        for i in range(steps + 1):
+            percent = i / steps
+            filled = int(width * percent)
+            bar = '█' * filled + '░' * (width - filled)
+            print(f"\r{message} [{bar}] {percent*100:.1f}%", end="", flush=True)
+            time.sleep(0.05)  # update setiap 0.05 detik
+        print(f"\r{message} [{bar}] 100.0% ✅{Colors.END}")
+    
+    elif style == "dots":
+        dots = ['.  ', '.. ', '...', '   ']
+        print(f"{Colors.CYAN}", end="")
+        for i in range(duration * 10):
+            print(f"\r{message}{dots[i % len(dots)]}", end="", flush=True)
+            time.sleep(0.1)
+        print(f"\r{message} ✅{Colors.END}")
+    
+    elif style == "matrix":
+        chars = "01"
+        print(f"{Colors.GREEN}", end="")
+        for i in range(duration * 10):
+            line = ""
+            for _ in range(20):
+                line += random.choice(chars)
+            print(f"\r{message} {line}", end="", flush=True)
+            time.sleep(0.1)
+        print(f"\r{message} ✅{Colors.END}")
+
+if __name__ == "__main__":
+    # Testing functions
+    print("Testing utils.py...")
+    
+    # Test timestamp
+    print(f"Timestamp: {get_timestamp()}")
+    
+    # Test progress bar
+    print("Progress bar test:")
+    for i in range(0, 101, 20):
+        print(f"\r{progress_bar(i, 100)}", end="")
+        time.sleep(0.2)
+    print()
+    
+    # Test IP validation
+    print(f"IP 192.168.1.1 valid: {validate_ip('192.168.1.1')}")
+    print(f"IP 999.999.999.999 valid: {validate_ip('999.999.999.999')}")
+    
+    # Test phone validation
+    print(f"Phone +628123456789 valid: {validate_phone('+628123456789')}")
+    print(f"Phone 123 valid: {validate_phone('123')}")
+    
+    print("\n✅ utils.py loaded successfully!")

