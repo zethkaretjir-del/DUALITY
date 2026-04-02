@@ -36,6 +36,9 @@ from modules.attack.advanced_attack.cam_hack import CameraHack
 from modules.attack.advanced_attack.pentest_report import PentestReport
 from modules.attack.advanced_attack.ddos_panel import DDoSPanel
 from modules.attack.advanced_attack.exploit_db import ExploitDB
+from modules.attack.rubber_ducky.generator import RubberDuckyGenerator
+from modules.attack.network_analyzer.analyzer import NetworkTrafficAnalyzer
+from modules.attack.ddos_flood.ddos_flood import DDoSFlood
 
 # Utility (5)
 from modules.utility.crypt import FileCrypt
@@ -74,6 +77,9 @@ from modules.attack.darkweb.darkweb_integration import DarkWebIntegration
 from modules.attack.social.social_scraper import SocialMediaScraper
 from modules.advanced.forensics.memory_forensics import MemoryForensics
 from modules.advanced.ai_agents.orchestrator import AIOrchestrator
+from modules.advanced.agent_gateway.gateway_core import AgentGateway
+from modules.advanced.agent_gateway.gateway_web import GatewayWeb
+from modules.advanced.ai_data_security.data_security import AIDataSecurity
 
 class DualityAttack:
     def __init__(self):
@@ -109,6 +115,9 @@ class DualityAttack:
             'pentest': PentestReport(),
             'ddospanel': DDoSPanel(),
             'exploitdb': ExploitDB(),
+            'ducky': RubberDuckyGenerator(),
+            'netanalyze': NetworkTrafficAnalyzer(),
+            'ddosreal': DDoSFlood(),
             # Utility (5)
             'crypt': FileCrypt(),
             'hash': HashGenerator(),
@@ -121,6 +130,8 @@ class DualityAttack:
             'vulnscan': VulnScanner(),
             'qr': QRGenerator(),
             'speedtest': SpeedTest(),
+            'gateway': AgentGateway(),
+            'gatewayweb': GatewayWeb(),
             # Botnet (1)
             'botnet': BotnetServer(),
             # Advanced (11)
@@ -140,6 +151,7 @@ class DualityAttack:
             'social': SocialMediaScraper(),
             'memforensics': MemoryForensics(),
             'aiorchestrator': AIOrchestrator(),
+            'aidata': AIDataSecurity(),
             }
         
     def banner(self):
@@ -198,6 +210,7 @@ class DualityAttack:
 {Colors.WHITE}  {Colors.WHITE}portadv{Colors.DIM}     - Advanced port scanner
 
 {Colors.RED}{Colors.BOLD}🔥 ADVANCED ATTACK ({Colors.WHITE}6 modules{Colors.CYAN}){Colors.END}
+{Colors.WHITE}  {Colors.WHITE}ddosreal{Colors.DIM}   - REAL DDoS Flood Attack
 {Colors.WHITE}  {Colors.WHITE}phish{Colors.DIM}      - Phishing page generator
 {Colors.WHITE}  {Colors.WHITE}wificrack{Colors.DIM}  - WiFi password cracker
 {Colors.WHITE}  {Colors.WHITE}camhack{Colors.DIM}    - Live camera hack
@@ -205,6 +218,8 @@ class DualityAttack:
 {Colors.WHITE}  {Colors.WHITE}ddospanel{Colors.DIM}  - DDoS web panel
 {Colors.WHITE}  {Colors.WHITE}exploitdb{Colors.DIM}  - Auto exploit database
 {Colors.WHITE}  {Colors.WHITE}vulnscan{Colors.DIM}   - Auto vulnerability scanner
+{Colors.WHITE}  {Colors.WHITE}ducky{Colors.DIM}      - USB Rubber Ducky script generator
+{Colors.WHITE}  {Colors.WHITE}netanalyze{Colors.DIM} - Network traffic analyzer
 
 {Colors.RED}🛠️ UTILITY MODULES ({Colors.WHITE}7 modules{Colors.CYAN}){Colors.END}
 {Colors.WHITE}  {Colors.WHITE}crypt{Colors.DIM}      - AES file encryption/decryption
@@ -217,6 +232,8 @@ class DualityAttack:
 {Colors.WHITE}  {Colors.WHITE}aiassist{Colors.DIM}   - AI Assistant chatbot
 {Colors.WHITE}  {Colors.WHITE}qr{Colors.DIM}         - QR Code generator
 {Colors.WHITE}  {Colors.WHITE}speedtest{Colors.DIM}  - Network speed test
+{Colors.WHITE}  {Colors.RED}gateway{Colors.DIM}    - Agent Gateway CLI
+{Colors.WHITE}  {Colors.RED}gatewayweb{Colors.DIM} - Agent Gateway Web Dashboard
 
 {Colors.RED}{Colors.BOLD}🤖 BOTNET MODULES ({Colors.WHITE}1 module{Colors.CYAN}){Colors.END}
 {Colors.WHITE}  {Colors.WHITE}botnet{Colors.DIM}     - Botnet C2 server (HTTP API)
@@ -238,6 +255,7 @@ class DualityAttack:
 {Colors.WHITE}  {Colors.WHITE}social{Colors.DIM}    - Social media scraper
 {Colors.WHITE}  {Colors.WHITE}memforensics{Colors.DIM} - Memory forensics (capture & analyze)
 {Colors.WHITE}  {Colors.WHITE}aiorchestrator{Colors.DIM} - AI multi-agent orchestrator
+{Colors.WHITE}  {Colors.WHITE}aidata{Colors.DIM}     - AI Data Security (PII detection)
 
 {Colors.RED}{Colors.BOLD}⚙️ SYSTEM COMMANDS{Colors.END}
 {Colors.WHITE}  {Colors.WHITE}help{Colors.DIM}       - Show this help menu
